@@ -43,7 +43,10 @@ func prework_pri(t int) *WsClient {
 		log.Fatal(err)
 	}
 
-	err = r.Start()
+	err = r.Start(func(message string) error {
+		fmt.Println(message)
+		return nil
+	})
 	if err != nil {
 		log.Fatal(err)
 	}

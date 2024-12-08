@@ -3,21 +3,24 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
+	. "github.com/zhouwei0192/OKEX_V5SDK_GO/ws/wImpl"
 	"log"
 	"strings"
 	"testing"
 	"time"
-	. "v5sdk_go/ws/wImpl"
 )
 
 func prework() *WsClient {
-	ep := "wss://ws.okex.com:8443/ws/v5/public?brokerId=9999"
+	ep := "wss://ws.okx.com:8443/ws/v5/business"
 	r, err := NewWsClient(ep)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = r.Start()
+	err = r.Start(func(message string) error {
+		fmt.Println(message)
+		return nil
+	})
 	if err != nil {
 		log.Fatal(err, ep)
 	}
@@ -172,8 +175,20 @@ func TestOpenInsterest(t *testing.T) {
 
 // K线频道测试
 func TestKLine(t *testing.T) {
-	r := prework()
-	var err error
+	ep := "wss://ws.okx.com:8443/ws/v5/business"
+	r, err := NewWsClient(ep)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = r.Start(func(message string) error {
+		fmt.Println(message)
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err, ep)
+	}
+	//var err error
 	var res bool
 
 	var args []map[string]string
@@ -193,19 +208,19 @@ func TestKLine(t *testing.T) {
 		fmt.Println("订阅失败！", err)
 		t.Fatal("订阅失败！", err)
 	}
-
-	time.Sleep(60 * time.Second)
+	select {}
+	//time.Sleep(60 * time.Second)
 	//等待推送
 
-	start = time.Now()
-	res, _, err = r.PubKLine(OP_UNSUBSCRIBE, period, args)
-	if res {
-		usedTime := time.Since(start)
-		fmt.Println("取消订阅成功！", usedTime.String())
-	} else {
-		fmt.Println("取消订阅失败！", err)
-		t.Fatal("取消订阅失败！", err)
-	}
+	//start = time.Now()
+	//res, _, err = r.PubKLine(OP_UNSUBSCRIBE, period, args)
+	//if res {
+	//	usedTime := time.Since(start)
+	//	fmt.Println("取消订阅成功！", usedTime.String())
+	//} else {
+	//	fmt.Println("取消订阅失败！", err)
+	//	t.Fatal("取消订阅失败！", err)
+	//}
 
 }
 
