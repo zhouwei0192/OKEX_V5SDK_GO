@@ -34,7 +34,7 @@ func (a *WsClient) Ping(timeOut ...int) (res bool, detail *ProcessDetail, err er
 	msg, err := a.process(ctx, EVENT_PING, nil)
 	if err != nil {
 		res = false
-		log.Println("处理请求失败!", err)
+		log.Println("ping 处理请求失败!", err)
 		return
 	}
 	detail.Data = msg
